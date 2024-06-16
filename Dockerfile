@@ -2,13 +2,12 @@
 FROM debian:latest
 
 # Install LXDE and XRDP
-RUN apt-get update && apt-get install -y lxde xrdp
+RUN apt-get update && apt-get install -y wmaker xrdp
 
 # Install ngrok
-RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-solaris-amd64.tgz -O ngrok.tgz && tar -xvzf ngrok.tgz && chmod +x ./ngrok
-
+RUN curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com/ buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
 # Set authtoken for ngrok
-RUN ./ngrok authtoken 1yENBwSuKCKupbiORPR88ZWMrtX_6pCE7ntSQwoozQKpLBKBF
+RUN ngrok authtoken 1yENBwSuKCKupbiORPR88ZWMrtX_6pCE7ntSQwoozQKpLBKBF
 
 # Create a non-root user with UID 10001 and password 'user'
 RUN groupadd --gid 10001 myuser && useradd --uid 10001 --gid myuser --shell /bin/bash --create-home myuser && echo "myuser:user" | chpasswd
