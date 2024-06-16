@@ -21,8 +21,8 @@ RUN groupadd --gid 10001 myuser \
 RUN echo "myuser ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers.d/myuser \
     && chmod 0440 /etc/sudoers.d/myuser
 
-# Switch to the non-root user
-USER myuser
+# Set USER to 10001
+USER 10001
 
 # Start XRDP and ngrok tunnel in CMD
 CMD (start xrdp &) && (sleep 10 && ngrok tcp 3389)
