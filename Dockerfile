@@ -13,7 +13,16 @@ RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-solaris-amd64.tgz 
 RUN /usr/local/bin/ngrok authtoken 1yENBwSuKCKupbiORPR88ZWMrtX_6pCE7ntSQwoozQKpLBKBF
 
 # Create a non-root user with UID 1000
-RUN useradd -u 1000 -m myuser
+RUN groupadd --gid 1000 myuser \
+    && useradd --uid 1000 --gid myuser --shell /bin/bash --create-home myuser \
+    && echo "myuser:new_password" | chpasswd
+
+# Set up sudo for the non-root user (if needed)
+RUN echo "myuser ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers.d/myuser \
+    && chmod 0440 /etc/sudoers.d/myuser
+
+# Switch to the non-root user
+USER myuser
 
 # Start XRDP and ngrok tunnel in CMD
 CMD (start xrdp &) && (sleep 10 && ngrok tcp 3389)
