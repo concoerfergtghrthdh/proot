@@ -2,10 +2,15 @@
 FROM debian:latest
 
 # Install LXDE and XRDP
-RUN apt-get update && apt-get install -y wmaker xrdp
+RUN apt-get update && apt-get install -y wmaker xrdp curl sudo wget git
 
 # Install ngrok
-RUN curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com/ buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
+RUN curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc
+RUN sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+RUN echo "deb https://ngrok-agent.s3.amazonaws.com/ buster main"
+RUN sudo tee /etc/apt/sources.list.d/ngrok.list 
+RUN sudo apt update
+RUN apt install ngrok
 # Set authtoken for ngrok
 RUN ngrok authtoken 1yENBwSuKCKupbiORPR88ZWMrtX_6pCE7ntSQwoozQKpLBKBF
 
